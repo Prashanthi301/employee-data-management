@@ -1,0 +1,47 @@
+import json
+import os
+
+FILE_NAME = "employee.json"
+
+def load_data():
+    if not os.path.exists(FILE_NAME):
+        return []
+    with open(FILE_NAME, "r") as file:
+        return json.load(file)
+
+def save_data(data):
+    with open(FILE_NAME, "w") as file:
+        json.dump(data, file, indent=4)
+
+def add_employee(name, age, department, skills):
+    data = load_data()
+    new_emp = {
+        "name": name,
+        "age": age,
+        "department": department,
+        "skills": skills
+    }
+    data.append(new_emp)
+    save_data(data)
+    return "Employee added successfully."
+
+def list_employees():
+    return load_data()
+
+def get_employee(name):
+    data = load_data()
+    for emp in data:
+        if emp["name"].lower() == name.lower():
+            return emp
+    return None
+
+def update_skills(name, new_skill):
+    data = load_data()
+    for emp in data:
+        if emp["name"].lower() == name.lower():
+            if new_skill not in emp["skills"]:
+                emp["skills"].append(new_skill)
+                save_data(data)
+                return "Skill added."
+            return "Skill already exists."
+    return "Employee not found."
